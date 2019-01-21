@@ -1,24 +1,33 @@
 module.exports = {
-    // configureWebpack: {
-    //     externals: {
-    //         'vue': 'Vue',
-    //         'vue-router': 'VueRouter',
-    //         'vuex': 'Vuex',
-    //         'axios': 'axios',
-    //         'lodash': '_',
-    //     },
-    // },
     productionSourceMap: false,
-    // chainWebpack: config => {
-    //     config.module
-    //         .rule('vue')
-    //         .use('vue-loader')
-    //         .loader('vue-loader')
-    //         .tap(options => {
-    //             options.transformAssetUrls = {
-    //                 'v-img': 'src',
-    //             };
-    //             return options
-    //         })
-    // }
+    pluginOptions: {
+        electronBuilder: {
+            builderOptions: {
+                // options placed here will be merged with default configuration and passed to electron-builder
+                productName: "ImageViewer",
+                appId: "org.mysticlorrow.imageviewer",
+                mac: {
+                    icon: "./public/icons/icon.icns",
+                    target: [
+                        "zip",
+                        "dmg"
+                    ]
+                },
+                win: {
+                    icon: "./public/icons/icon.ico",
+                    target: [
+                        {
+                            target: "nsis",
+                            arch: [
+                                "x64",
+                            ]
+                        }
+                    ]
+                },
+                nsis: {
+                    perMachine: true
+                },
+            }
+        }
+    }
 };

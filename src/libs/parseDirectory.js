@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const tempAlbum = [];
+let tempAlbum = [];
 const readPath = (dirPath, fileName) => {
     const files = fs.readdirSync(dirPath);
     // console.log(files);
@@ -38,6 +38,7 @@ const readPath = (dirPath, fileName) => {
 const getFileArr = (dirPath, fileName) => {
     return new Promise((resolve, reject) => {
         if (dirPath) {
+            tempAlbum = [];
             readPath(dirPath, fileName);
             resolve(tempAlbum);
         } else {

@@ -54,17 +54,21 @@
             <v-list class="pt-0" dense>
                 <v-divider></v-divider>
 
-                <v-list-tile
-                        v-for="item in items"
-                        :key="item.title"
-                        @click="dialog = !dialog"
-                >
+                <v-list-tile @click="openDialog(imageRoot)">
                     <v-list-tile-action>
-                        <v-icon>{{ item.icon }}</v-icon>
+                        <v-icon>folder_open</v-icon>
                     </v-list-tile-action>
-
                     <v-list-tile-content>
-                        <v-list-tile-title>{{ item.title }}</v-list-tile-title>
+                        <v-list-tile-title>Change Image Root</v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+
+                <v-list-tile @click="readPath(imageRoot)">
+                    <v-list-tile-action>
+                        <v-icon>refresh</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title>Refresh Current Directory</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
@@ -98,6 +102,11 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-snackbar v-model="snackbar" :color="color" :timeout="timeout" :top="true">
+            {{ text }}
+            <v-btn dark flat @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
     </div>
 </template>
 
@@ -106,6 +115,7 @@
     import "lightgallery.js";
     import 'lg-thumbnail.js';
     import getFileArr from '../libs/parseDirectory';
+    import changeImageRoot from '../libs/changeImageRoot';
     import { version } from '../../package.json';
 
     export default {
@@ -116,25 +126,32 @@
                 version,
 
                 drawer: null,
-                items: [
-                    { title: 'Change Image Root', icon: 'dashboard' },
-                    { title: 'About', icon: 'question_answer' }
-                ],
 
                 tempAlbum: [],
 
                 dialog: false,
                 imageRoot: '',
+
+                snackbar: false,
+                color: '',
+                timeout: 0,
+                text: ''
             }
         },
         mounted() {
-
-            const imageRoot = '/Users/lorrow/Documents/node_www/lorrow-homepage/images/';
-
-            this.readPath(imageRoot);
-
+            this.checkDefaultPath();
         },
         methods: {
+            checkDefaultPath() {
+                const imageRoot = localStorage.IM_IMAGE_ROOT;
+                if (imageRoot) {
+                    this.imageRoot = imageRoot;
+                    this.readPath(this.imageRoot);
+                } else {
+                    this.showSnackBar('Choose Image Root', 'error', 0);
+                }
+            },
+
             showAlbum(index) {
                 console.log(index);
 
@@ -159,6 +176,24 @@
                 const tempAlbum = await getFileArr(dirPath);
                 console.log(tempAlbum);
                 this.tempAlbum = tempAlbum;
+            },
+
+            async openDialog(defaultPath = '') {
+                const selectedPath = await changeImageRoot(defaultPath);
+
+                if (selectedPath.length) {
+                    this.imageRoot = selectedPath[0];
+                    localStorage.IM_IMAGE_ROOT = this.imageRoot;
+                    this.readPath(this.imageRoot);
+                }
+            },
+
+
+            showSnackBar(text, color, timeout) {
+                this.text = text;
+                this.color = color;
+                this.timeout = timeout;
+                this.snackbar = true;
             },
         },
     }
