@@ -153,7 +153,7 @@
             },
 
             showAlbum(index) {
-                console.log(index);
+                // console.log(index);
 
                 const currentGallery = [];
                 this.tempAlbum[index].fileArr.forEach((album) => {
