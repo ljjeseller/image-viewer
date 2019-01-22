@@ -74,8 +74,6 @@
             </v-list>
         </v-navigation-drawer>
 
-        <div id="dynamic"></div>
-
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card>
                 <v-card-title>
@@ -119,7 +117,7 @@
     import { version } from '../../package.json';
 
     export default {
-        name: 'App',
+        name: 'Home',
         components: {},
         data() {
             return {
@@ -151,10 +149,7 @@
                     this.showSnackBar('Choose Image Root', 'error', 0);
                 }
             },
-
             showAlbum(index) {
-                // console.log(index);
-
                 const currentGallery = [];
                 this.tempAlbum[index].fileArr.forEach((album) => {
                     currentGallery.push({
@@ -162,12 +157,25 @@
                         thumb: this.getImageUrl(album),
                     });
                 });
+                // console.log(currentGallery);
 
-                window.lightGallery(document.getElementById('dynamic'), {
+                const div = document.createElement('div');
+                div.setAttribute('id', 'dynamic');
+                document.body.appendChild(div);
+                const lg = document.getElementById('dynamic');
+
+                window.lightGallery(lg, {
                     dynamic: true,
                     thumbnail: true,
+                    download: false,
+                    loop: false,
+                    closable: false,
                     dynamicEl: currentGallery,
-                })
+                });
+
+                lg.addEventListener('onCloseAfter', () => {
+                    lg.parentNode.removeChild(lg);
+                }, false);
             },
             getImageUrl(img) {
                 return 'file://' + img;
@@ -177,7 +185,6 @@
                 // console.log(tempAlbum);
                 // this.tempAlbum = tempAlbum;
             },
-
             async openDialog(defaultPath = '') {
                 const selectedPath = await changeImageRoot(defaultPath);
 
@@ -187,8 +194,6 @@
                     this.readPath(this.imageRoot);
                 }
             },
-
-
             showSnackBar(text, color, timeout) {
                 this.text = text;
                 this.color = color;

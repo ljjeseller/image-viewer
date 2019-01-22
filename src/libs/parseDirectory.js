@@ -30,9 +30,10 @@ const readPath = (dirPath, fileName) => {
         }
     });
 
-    singleAlbum.thumb = singleAlbum.fileArr[0] || '';
-
-    tempAlbum.push(singleAlbum);
+    if (singleAlbum.fileArr.length) {
+        singleAlbum.thumb = singleAlbum.fileArr[0] || '';
+        tempAlbum.push(singleAlbum);
+    }
 };
 
 const getFileArr = (dirPath, fileName) => {
