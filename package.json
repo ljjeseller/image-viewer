@@ -12,7 +12,8 @@
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
-    "electron:buildWin": "vue-cli-service electron:build --win"
+    "electron:buildWin": "vue-cli-service electron:build --win",
+    "electron:buildWinPublish": "vue-cli-service electron:build --win --publish onTagOrDraft"
   },
   "dependencies": {
     "lg-thumbnail.js": "^1.1.0",
