@@ -15,6 +15,7 @@ module.exports = {
                 },
                 win: {
                     icon: "./public/icons/icon.ico",
+                    publish: ["github"],
                     target: [
                         {
                             target: "nsis",
