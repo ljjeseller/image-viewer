@@ -1,6 +1,6 @@
 {
   "name": "image-viewer",
-  "version": "1.2.9",
+  "version": "1.3.0",
   "private": true,
   "author": "MysticLorrow",
   "description": "A special tool to view images.",
@@ -13,7 +13,8 @@
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "electron:buildWin": "vue-cli-service electron:build --win",
-    "electron:buildWinPublish": "vue-cli-service electron:build --win --publish always"
+    "electron:buildWinPublish": "vue-cli-service electron:build --win --publish always",
+    "electron:buildPublish": "vue-cli-service electron:build --publish always"
   },
   "dependencies": {
     "lg-thumbnail.js": "^1.1.0",
