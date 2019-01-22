@@ -20,6 +20,7 @@ module.exports = {
                             target: "nsis",
                             arch: [
                                 "x64",
+                                "ia32"
                             ]
                         }
                     ]
