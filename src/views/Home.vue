@@ -173,9 +173,9 @@
                 return 'file://' + img;
             },
             async readPath(dirPath) {
-                const tempAlbum = await getFileArr(dirPath);
-                console.log(tempAlbum);
-                this.tempAlbum = tempAlbum;
+                this.tempAlbum = await getFileArr(dirPath);
+                // console.log(tempAlbum);
+                // this.tempAlbum = tempAlbum;
             },
 
             async openDialog(defaultPath = '') {
