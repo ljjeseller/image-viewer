@@ -114,6 +114,7 @@
     import 'lg-thumbnail.js';
     import getFileArr from '../libs/parseDirectory';
     import changeImageRoot from '../libs/changeImageRoot';
+    import downloadSingle from '../libs/download';
     import { version } from '../../package.json';
 
     export default {
@@ -138,6 +139,16 @@
         },
         mounted() {
             this.checkDefaultPath();
+
+
+            const arr = [
+                'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
+                'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
+                'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
+            ];
+
+            //this.downloadSequence(arr);
+
         },
         methods: {
             checkDefaultPath() {
@@ -199,6 +210,44 @@
                 this.color = color;
                 this.timeout = timeout;
                 this.snackbar = true;
+            },
+
+            async downloadSingleFile() {
+                // await downloadSingle('https://unsplash.com/photos/AaEQmoufHLk/download?force=true');
+
+                // http://bit.ly/2mTM3nY
+
+                const imagePath = '/Users/lorrow/Documents/node_www/image-viewer/code.jpg';
+
+                //await downloadSingle('https://unsplash.com/photos/AaEQmoufHLk/download?force=true', imagePath);
+
+                const all = [];
+
+                for (let i = 0; i < 5; i++) {
+                    const p = downloadSingle('https://unsplash.com/photos/AaEQmoufHLk/download?force=true', `/Users/lorrow/Documents/node_www/image-viewer/code${i}.jpg`);
+                    all.push(p);
+                }
+
+
+                const PA = await Promise.all(all);
+
+                console.log(PA);
+
+            },
+            async downloadSequence(fileArr = []) {
+                const promiseAll = [];
+
+                fileArr.forEach((elem, index) => {
+                    const promiseSingle = downloadSingle(elem, `/Users/lorrow/Documents/node_www/image-viewer/code${index}.jpg`);
+                    promiseAll.push(promiseSingle);
+                });
+
+                try {
+                    await Promise.all(promiseAll);
+                    this.showSnackBar('Download success', 'success', 0);
+                } catch (e) {
+                    this.showSnackBar('Download failed', 'error', 0);
+                }
             },
         },
     }
