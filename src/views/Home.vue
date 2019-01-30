@@ -117,6 +117,9 @@
     import downloadSingle from '../libs/download';
     import { version } from '../../package.json';
 
+    import downloadSequence from '../libs/downloadSequence';
+    import parseQueue from '../libs/parseQueue';
+
     export default {
         name: 'Home',
         components: {},
@@ -145,12 +148,28 @@
                 'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
                 'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
                 'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
+                'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
+                'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
+                'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
             ];
+
+
+            new parseQueue(arr, 4);
 
             //this.downloadSequence(arr);
 
+            // this.test();
+
         },
         methods: {
+            test() {
+                const p = new downloadSequence('http://bit.ly/2mTM3nY', `/Users/lorrow/Documents/node_www/image-viewer/code.jpg`);
+                // console.log(p);
+            },
+
+
+
+
             checkDefaultPath() {
                 const imageRoot = localStorage.IM_IMAGE_ROOT;
                 if (imageRoot) {
