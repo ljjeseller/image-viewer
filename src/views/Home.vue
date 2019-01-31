@@ -14,13 +14,17 @@
                                     :src="getImageUrl(album.thumb)"
                                     aspect-ratio="2"
                                     height="250px">
+
+                                <div style="position: absolute;right:2px;top:2px;">
+                                    <v-btn fab dark small  color="error">{{album.fileArr.length}}</v-btn>
+                                </div>
+
                                 <v-layout
                                         slot="placeholder"
                                         fill-height
                                         align-center
                                         justify-center
-                                        ma-0
-                                >
+                                        ma-0>
                                     <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
                                 </v-layout>
                             </v-img>
@@ -36,6 +40,7 @@
                 v-model="drawer"
                 absolute
                 temporary
+                stateless
         >
             <v-list class="pa-1">
                 <v-list-tile avatar>
@@ -48,6 +53,12 @@
                     </v-list-tile-content>
 
                     <v-list-tile-action>v{{version}}</v-list-tile-action>
+
+                    <v-list-tile-action>
+                        <v-btn icon @click.stop="drawer = !drawer">
+                            <v-icon>chevron_left</v-icon>
+                        </v-btn>
+                    </v-list-tile-action>
                 </v-list-tile>
             </v-list>
 
@@ -71,13 +82,35 @@
                         <v-list-tile-title>Refresh Current Directory</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
+
+                <v-divider></v-divider>
+
+                <v-list-tile @click="dialog = !dialog">
+                    <v-list-tile-action>
+                        <v-icon>edit</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title>Edit User Cookie</v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+
+                <v-list-tile @click="dialogDownload = !dialogDownload">
+                    <v-list-tile-action>
+                        <v-icon>vertical_align_bottom</v-icon>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title>Download New Album</v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+
+                <v-divider></v-divider>
             </v-list>
         </v-navigation-drawer>
 
         <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card>
                 <v-card-title>
-                    <span class="headline">Change Image Root</span>
+                    <span class="headline">Edit User Cookie</span>
                 </v-card-title>
 
                 <v-card-text>
@@ -85,18 +118,65 @@
                         <v-layout wrap>
                             <v-flex xs12>
                                 <v-text-field
-                                        v-model="imageRoot"
-                                        label="Image Root"
+                                        v-model="cookie1"
+                                        :rules="[() => !!cookie1 || 'This field is required']"
+                                        label="Cookie 1"
+                                        prepend-icon="storage"
+                                        placeholder="Placeholder"
                                         required
+                                        clearable
+                                ></v-text-field>
+
+                                <v-text-field
+                                        v-model="cookie2"
+                                        :rules="[() => !!cookie2 || 'This field is required']"
+                                        label="Cookie 2"
+                                        prepend-icon="storage"
+                                        placeholder="Placeholder"
+                                        required
+                                        clearable
                                 ></v-text-field>
                             </v-flex>
                         </v-layout>
                     </v-container>
                 </v-card-text>
+
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn flat @click="dialog = false">Close</v-btn>
                     <v-btn flat @click="dialog = false">Save</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialogDownload" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Download New Album</span>
+                </v-card-title>
+
+                <v-card-text>
+                    <v-container grid-list-md>
+                        <v-layout wrap>
+                            <v-flex xs12>
+                                <v-text-field
+                                        v-model="albumUrl"
+                                        :rules="[() => !!albumUrl || 'This field is required']"
+                                        label="Album Url"
+                                        prepend-icon="how_to_vote"
+                                        placeholder="Placeholder"
+                                        required
+                                        clearable
+                                ></v-text-field>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn flat @click="dialogDownload = false">Close</v-btn>
+                    <v-btn flat @click="dialogDownload = false">Start Download</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -132,6 +212,12 @@
                 tempAlbum: [],
 
                 dialog: false,
+                cookie1: '',
+                cookie2: '',
+
+                dialogDownload: false,
+                albumUrl: '',
+
                 imageRoot: '',
 
                 snackbar: false,
@@ -154,7 +240,7 @@
             ];
 
 
-            new parseQueue(arr, 4);
+            // new parseQueue(arr, 4);
 
             //this.downloadSequence(arr);
 
