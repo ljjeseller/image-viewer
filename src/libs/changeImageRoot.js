@@ -1,8 +1,10 @@
 const { dialog } = require('electron').remote;
+const { BrowserWindow } = require('electron').remote;
 
 const changeImageRoot = (defaultPath = '') => {
     return new Promise((resolve) => {
-        dialog.showOpenDialog({
+        const currentWindow = BrowserWindow.getFocusedWindow();
+        dialog.showOpenDialog(currentWindow, {
             title: 'Choose Image Root',
             defaultPath,
             properties: ['openDirectory'],
