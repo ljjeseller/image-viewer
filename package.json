@@ -1,6 +1,6 @@
 {
   "name": "image-viewer",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "private": true,
   "author": "MysticLorrow",
   "description": "A special tool to view images.",
@@ -17,12 +17,15 @@
     "electron:buildPublish": "vue-cli-service electron:build --publish always"
   },
   "dependencies": {
+    "aria2": "^4.0.3",
+    "cheerio": "^1.0.0-rc.2",
     "lg-thumbnail.js": "^1.1.0",
     "lightgallery.js": "^1.1.2",
     "lodash": "^4.17.11",
     "request": "^2.88.0",
     "vue": "^2.5.21",
     "vue-router": "^3.0.1",
+    "vue-toasted": "^1.1.26",
     "vuetify": "^1.3.0",
     "vuex": "^3.0.1"
   },

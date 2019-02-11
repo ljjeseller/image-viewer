@@ -1,12 +1,15 @@
 const request = require('request');
 const fs = require('fs');
 
-// download
-const download = (url, filePath) => {
+// Promise download
+const download = (url, filePath, referer) => {
     return new Promise((resolve, reject) => {
         const req = request({
             method: 'GET',
-            uri: url
+            uri: url,
+            headers: {
+                referer: referer === 'm' ? 'http://www.mzitu.com/' : '', // m = mzitu
+            }
         });
 
         req.pipe(fs.createWriteStream(filePath));
