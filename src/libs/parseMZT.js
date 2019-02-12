@@ -1,5 +1,7 @@
 const cheerio = require('cheerio');
 const request = require('request');
+const path = require('path');
+const fs = require('fs');
 import download from './download';
 
 const singleAlbum = {
@@ -53,25 +55,45 @@ const getAlbumPages = (url) => {
 
 };
 
-const downloadFile = (url) => {
+const downloadFile = (url, imageRoot) => {
     return new Promise(async (resolve, reject) => {
         const tempArr = await getAlbumPages(url);
 
-        const promiseAll = [];
+        console.log(111);
 
-        tempArr.forEach((elem, index) => {
-            const promiseSingle = download(elem, `/Users/lorrow/Documents/node_www/image-viewer/img-${index}.jpg`, 'm');
-            promiseAll.push(promiseSingle);
-        });
+        const currentDir = path.join(imageRoot, singleAlbum.fileName);
+        console.log(currentDir);
 
-        try {
-            const fileArr = await Promise.all(promiseAll);
-            console.log(fileArr);
-        } catch (e) {
-            reject(new Error(e));
-        }
+        const stats = fs.statSync(currentDir);
+        console.log(stats);
+        console.log(222);
 
 
+        // const stats = fs.statSync(currentDir);
+        // console.log(stats);
+        // const isDir = stats.isDirectory();
+        // console.log(222);
+        //
+        // if (!isDir) {
+        //     fs.mkdirSync(currentDir);
+        // }
+        //
+        // console.log(333);
+        //
+        // const promiseAll = [];
+        //
+        // tempArr.forEach((elem, index) => {
+        //     const currentFilePath = path.join(currentDir, `img-${index}.jpg`);
+        //     const promiseSingle = download(elem, currentFilePath, 'm');
+        //     promiseAll.push(promiseSingle);
+        // });
+        //
+        // try {
+        //     const fileArr = await Promise.all(promiseAll);
+        //     console.log(fileArr);
+        // } catch (e) {
+        //     reject(new Error(e));
+        // }
     });
 };
 
@@ -93,15 +115,10 @@ const getOtherImages = (url) => {
 
 
 
-const parseMZT = (url) => {
+const parseMZT = (url, imageRoot) => {
     return new Promise(async (resolve, reject) => {
         try {
-            //await downloadFile(url);
-
-
-
-
-
+            await downloadFile(url, imageRoot);
 
             resolve(singleAlbum);
         } catch (e) {

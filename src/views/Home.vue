@@ -152,7 +152,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn flat @click="dialogDownload = false">Close</v-btn>
-                    <v-btn flat @click="dialogDownload = false">Start Download</v-btn>
+                    <v-btn flat @click="startDownload">Start Download</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -202,59 +202,37 @@
         mounted() {
             this.checkDefaultPath();
 
-
-
-
-
-            // new parseQueue(arr, 4);
-
-            // this.downloadSequence(arr);
-
-            //this.parseMZT();
-
-            // initializeAria2();
-
-
-
-
+            // this.parseMZT();
         },
         methods: {
+            startDownload() {
+                if (this.downloadType === 'E-Hentai') {
+                    this.$toasted.error('Coming soon');
+                    this.dialogDownload = false;
+                    return false;
+                }
+
+                if (this.albumUrl === '') {
+                    this.$toasted.error('This Album Url is required');
+                    return false;
+                }
+
+
+
+                // this.parseMZT();
+
+
+
+            },
             async parseMZT() {
-                const album = await parseMZT('https://www.mzitu.com/54354/');
+                const album = await parseMZT('https://www.mzitu.com/54354/', this.imageRoot);
                 //console.log(album);
                 // this.tempAlbum.push(album);
 
                 // const promiseSingle = downloadSingle(album.thumb, `/Users/lorrow/Documents/node_www/image-viewer/`);
             },
 
-
-
-
             async test() {
-
-
-
-                // const notifications = await this.$aria2.listNotifications();
-                // /*
-                // [
-                //   'onDownloadStart',
-                //   'onDownloadPause',
-                //   'onDownloadStop',
-                //   'onDownloadComplete',
-                //   'onDownloadError',
-                //   'onBtDownloadComplete'
-                // ]
-                // */
-                //
-                // // notifications logger example
-                // notifications.forEach((notification) => {
-                //     this.$aria2.on(notification, (params) => {
-                //         console.log('aria2', notification, params)
-                //     })
-                // });
-
-
-
 
                 const arr = [
                     'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
@@ -288,9 +266,6 @@
                 console.log(promises);
 
             },
-
-
-
 
             checkDefaultPath() {
                 const imageRoot = localStorage.IM_IMAGE_ROOT;
@@ -347,8 +322,6 @@
             },
             async readPath(dirPath) {
                 this.tempAlbum = await getFileArr(dirPath);
-                // console.log(tempAlbum);
-                //this.test();
             },
             async openDialog(defaultPath = '') {
                 const selectedPath = await changeImageRoot(defaultPath);
