@@ -1,5 +1,6 @@
 const request = require('request');
 const fs = require('fs');
+import Vue from 'vue'
 
 // Promise download
 const download = (url, filePath, referer) => {
@@ -15,16 +16,16 @@ const download = (url, filePath, referer) => {
         req.pipe(fs.createWriteStream(filePath));
 
         req.on('response', () => {
-           console.log(`Starting download: ${filePath}`);
+            Vue.toasted.show(`Starting download: ${filePath}`);
         });
 
         req.on('end', () => {
-            console.log(`Finish download: ${filePath}`);
+            Vue.toasted.success(`Finish download: ${filePath}`);
             resolve();
         });
 
         req.on('error', () => {
-            console.log('error');
+            Vue.toasted.error(`Error: ${filePath}`);
             reject();
         });
     });

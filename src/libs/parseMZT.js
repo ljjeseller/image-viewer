@@ -12,11 +12,9 @@ const singleAlbum = {
 
 const getAlbumPages = (url) => {
     return new Promise((resolve, reject) => {
-
         let tempArr = [];
 
         request(url, async (error, response, body) => {
-
             if (error) {
                 reject(new Error(error));
             }
@@ -29,12 +27,7 @@ const getAlbumPages = (url) => {
             singleAlbum.fileName = title;
             tempArr.push(pageImage);
 
-            // console.log(title);
-            // console.log(lastPage);
-            // console.log(pageImage);
-
             const promiseAll = [];
-
             for (let i = 2; i <= lastPage; i++) {
                 const promiseSingle = await getOtherImages(`${url}/${i}`);
                 promiseAll.push(promiseSingle);
@@ -46,57 +39,12 @@ const getAlbumPages = (url) => {
                 tempArr = tempArr.concat(promiseAll);
                 resolve(tempArr);
             } catch (e) {
-                console.log('failed');
+                console.log(e);
                 reject(new Error(e));
             }
-
         });
     });
-
 };
-
-const downloadFile = (url, imageRoot) => {
-    return new Promise(async (resolve, reject) => {
-        const tempArr = await getAlbumPages(url);
-
-        console.log(111);
-
-        const currentDir = path.join(imageRoot, singleAlbum.fileName);
-        console.log(currentDir);
-
-        const stats = fs.statSync(currentDir);
-        console.log(stats);
-        console.log(222);
-
-
-        // const stats = fs.statSync(currentDir);
-        // console.log(stats);
-        // const isDir = stats.isDirectory();
-        // console.log(222);
-        //
-        // if (!isDir) {
-        //     fs.mkdirSync(currentDir);
-        // }
-        //
-        // console.log(333);
-        //
-        // const promiseAll = [];
-        //
-        // tempArr.forEach((elem, index) => {
-        //     const currentFilePath = path.join(currentDir, `img-${index}.jpg`);
-        //     const promiseSingle = download(elem, currentFilePath, 'm');
-        //     promiseAll.push(promiseSingle);
-        // });
-        //
-        // try {
-        //     const fileArr = await Promise.all(promiseAll);
-        //     console.log(fileArr);
-        // } catch (e) {
-        //     reject(new Error(e));
-        // }
-    });
-};
-
 
 
 const getOtherImages = (url) => {
@@ -113,18 +61,53 @@ const getOtherImages = (url) => {
     });
 };
 
+// check dir exist
+const checkDir = (imageRoot) => {
+    return new Promise((resolve) => {
+        const currentDir = path.join(imageRoot, singleAlbum.fileName);
+        fs.stat(currentDir, (err) => {
+            if (err) {
+                fs.mkdirSync(currentDir);
+            }
+            resolve(currentDir);
+        });
+    });
+};
+
+
+const downloadFile = (urlArr, imageRoot) => {
+    return new Promise( async (resolve, reject) => {
+        const currentDir = await checkDir(imageRoot);
+        console.log(currentDir);
+
+        const promiseAll = [];
+        urlArr.forEach((elem, index) => {
+            const currentFilePath = path.join(currentDir, `img-${index}.jpg`);
+            const promiseSingle = download(elem, currentFilePath, 'm');
+            promiseAll.push(promiseSingle);
+        });
+
+        try {
+            await Promise.all(promiseAll);
+            resolve();
+        } catch (e) {
+            console.log(e);
+            reject();
+        }
+    });
+};
 
 
 const parseMZT = (url, imageRoot) => {
     return new Promise(async (resolve, reject) => {
         try {
-            await downloadFile(url, imageRoot);
-
-            resolve(singleAlbum);
+            const imgUrlArr = await getAlbumPages(url);
+            await downloadFile(imgUrlArr, imageRoot);
+            resolve();
         } catch (e) {
-            reject(new Error(e));
+            console.log(e);
+            reject();
         }
-
     });
 };
 

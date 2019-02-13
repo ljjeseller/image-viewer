@@ -170,7 +170,6 @@
     import 'lg-thumbnail.js';
     import getFileArr from '../libs/parseDirectory';
     import changeImageRoot from '../libs/changeImageRoot';
-    import downloadSingle from '../libs/download';
     import parseMZT from '../libs/parseMZT';
     import { version } from '../../package.json';
 
@@ -188,7 +187,7 @@
                 cookie1: '',
                 cookie2: '',
                 dialogDownload: false,
-                albumUrl: '',
+                albumUrl: 'https://www.mzitu.com/54354/',
                 downloadType: 'Mzitu',
 
                 imageRoot: '',
@@ -201,8 +200,6 @@
         },
         mounted() {
             this.checkDefaultPath();
-
-            // this.parseMZT();
         },
         methods: {
             startDownload() {
@@ -217,23 +214,16 @@
                     return false;
                 }
 
-
-
-                // this.parseMZT();
-
-
-
+                // https://www.mzitu.com/54354/
+                this.downloadMZT(this.albumUrl);
+                this.dialogDownload = false;
             },
-            async parseMZT() {
-                const album = await parseMZT('https://www.mzitu.com/54354/', this.imageRoot);
-                //console.log(album);
-                // this.tempAlbum.push(album);
-
-                // const promiseSingle = downloadSingle(album.thumb, `/Users/lorrow/Documents/node_www/image-viewer/`);
+            async downloadMZT(albumUrl) {
+                await parseMZT(albumUrl, this.imageRoot);
+                this.refreshCurrentPath();
             },
 
             async test() {
-
                 const arr = [
                     'https://unsplash.com/photos/AaEQmoufHLk/download?force=true',
                     'https://www.google.com/images/srpr/logo11w.png',
@@ -264,7 +254,6 @@
 
                 const promises = await this.$aria2.batch(batch);
                 console.log(promises);
-
             },
 
             checkDefaultPath() {
@@ -317,7 +306,6 @@
                 if (img.indexOf('http') > -1) {
                     return img;
                 }
-
                 return 'file://' + img;
             },
             async readPath(dirPath) {
@@ -337,44 +325,6 @@
                 this.color = color;
                 this.timeout = timeout;
                 this.snackbar = true;
-            },
-
-            async downloadSingleFile() {
-                // await downloadSingle('https://unsplash.com/photos/AaEQmoufHLk/download?force=true');
-
-                // http://bit.ly/2mTM3nY
-
-                const imagePath = '/Users/lorrow/Documents/node_www/image-viewer/code.jpg';
-
-                //await downloadSingle('https://unsplash.com/photos/AaEQmoufHLk/download?force=true', imagePath);
-
-                const all = [];
-
-                for (let i = 0; i < 5; i++) {
-                    const p = downloadSingle('https://unsplash.com/photos/AaEQmoufHLk/download?force=true', `/Users/lorrow/Documents/node_www/image-viewer/code${i}.jpg`);
-                    all.push(p);
-                }
-
-
-                const PA = await Promise.all(all);
-
-                console.log(PA);
-
-            },
-            async downloadSequence(fileArr = []) {
-                const promiseAll = [];
-
-                fileArr.forEach((elem, index) => {
-                    const promiseSingle = downloadSingle(elem, `/Users/lorrow/Documents/node_www/image-viewer/code${index}.jpg`);
-                    promiseAll.push(promiseSingle);
-                });
-
-                try {
-                    await Promise.all(promiseAll);
-                    this.showSnackBar('Download success', 'success', 0);
-                } catch (e) {
-                    this.showSnackBar('Download failed', 'error', 0);
-                }
             },
         },
     }
