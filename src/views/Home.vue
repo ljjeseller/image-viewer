@@ -187,7 +187,7 @@
                 cookie1: '',
                 cookie2: '',
                 dialogDownload: false,
-                albumUrl: 'https://www.mzitu.com/54354/',
+                albumUrl: '',
                 downloadType: 'Mzitu',
 
                 imageRoot: '',
